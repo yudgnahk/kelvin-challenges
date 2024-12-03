@@ -1,5 +1,7 @@
 package daily
 
+import "strings"
+
 // 2109. Adding Spaces to a String
 // https://leetcode.com/problems/adding-spaces-to-a-string/
 func addSpaces(s string, spaces []int) string {
@@ -7,34 +9,16 @@ func addSpaces(s string, spaces []int) string {
 		return s
 	}
 
-	resp := ""
-	curSpace := 0
-	if spaces[curSpace] == 0 {
-		resp += " "
-		curSpace++
+	var builder strings.Builder
+	builder.Grow(len(s) + len(spaces))
+
+	lastPos := 0
+	for _, space := range spaces {
+		builder.WriteString(s[lastPos:+space])
+		builder.WriteByte(' ')
+		lastPos = space
 	}
+	builder.WriteString(s[lastPos:])
 
-	isFinished := false
-	finishedPos := 0
-
-	for i := 0; i < len(s); i++ {
-		if i < spaces[curSpace] {
-			resp += string(s[i])
-		} else {
-			resp += " "
-			if curSpace+1 < len(spaces) {
-				curSpace++
-			} else {
-				isFinished = true
-				finishedPos = i
-				break
-			}
-		}
-	}
-
-	if isFinished {
-		resp += s[finishedPos:]
-	}
-
-	return resp
+	return builder.String()
 }
